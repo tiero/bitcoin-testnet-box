@@ -7,6 +7,7 @@ LABEL maintainer="Sean Lavine <lavis88@gmail.com>"
 # add bitcoind from the official PPA
 # install bitcoind (from PPA) and make
 RUN apt-get update && \
+	apt-get install --yes jq && \
 	apt-get install --yes software-properties-common && \
 	add-apt-repository --yes ppa:bitcoin/bitcoin && \
 	apt-get update && \
@@ -28,6 +29,10 @@ RUN chown -R tester:tester /home/tester/bitcoin-testnet-box
 RUN mv /home/tester/bitcoin-testnet-box/.bashrc /home/tester/ && \
 	cat /home/tester/.bashrc >> /etc/bash.bashrc
 
+RUN echo 'alias e1-cli="/home/tester/bitcoin-testnet-box/liquid/bin/liquid-cli -datadir=1"' >> /home/tester/.bashrc
+RUN echo 'alias e1-d="/home/tester/bitcoin-testnet-box/liquid/bin/liquidd -datadir=1"' >> /home/tester/.bashrc
+RUN echo 'alias e2-cli="/home/tester/bitcoin-testnet-box/liquid/bin/liquid-cli -datadir=2"' >> /home/tester/.bashrc
+RUN echo 'alias e2-d="/home/tester/bitcoin-testnet-box/liquid/bin/liquidd -datadir=2"' >> /home/tester/.bashrc
 # use the tester user when running the image
 USER tester
 
@@ -37,3 +42,6 @@ WORKDIR /home/tester/bitcoin-testnet-box
 # expose two rpc ports for the nodes to allow outside container access
 EXPOSE 19001 19011
 CMD ["/bin/bash"]
+
+
+
