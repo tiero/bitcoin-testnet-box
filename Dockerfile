@@ -29,10 +29,14 @@ RUN chown -R tester:tester /home/tester/bitcoin-testnet-box
 RUN mv /home/tester/bitcoin-testnet-box/.bashrc /home/tester/ && \
 	cat /home/tester/.bashrc >> /etc/bash.bashrc
 
-RUN echo 'alias e1-cli="/home/tester/bitcoin-testnet-box/liquid/bin/liquid-cli -datadir=1"' >> /home/tester/.bashrc
-RUN echo 'alias e1-d="/home/tester/bitcoin-testnet-box/liquid/bin/liquidd -datadir=1"' >> /home/tester/.bashrc
-RUN echo 'alias e2-cli="/home/tester/bitcoin-testnet-box/liquid/bin/liquid-cli -datadir=2"' >> /home/tester/.bashrc
-RUN echo 'alias e2-d="/home/tester/bitcoin-testnet-box/liquid/bin/liquidd -datadir=2"' >> /home/tester/.bashrc
+# Move liquid binaries
+RUN mv /home/tester/bitcoin-testnet-box/liquid/bin/liquidd /usr/bin/liquidd
+RUN mv /home/tester/bitcoin-testnet-box/liquid/bin/liquid-cli /usr/bin/liquid-cli
+# Add some aliases
+RUN echo 'alias e1-cli="liquid-cli -datadir=1"' >> /home/tester/.bashrc && \
+	echo 'alias e1-d="liquidd -datadir=1"' >> /home/tester/.bashrc && \
+	echo 'alias e2-cli="liquid-cli -datadir=2"' >> /home/tester/.bashrc && \
+	echo 'alias e2-d="liquidd -datadir=2"' >> /home/tester/.bashrc
 # use the tester user when running the image
 USER tester
 
